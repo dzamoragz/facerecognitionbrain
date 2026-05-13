@@ -1,18 +1,28 @@
-# React + Vite
+# Smart Brain Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React frontend for the Smart Brain face recognition application.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## React Compiler
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+3. Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-Note: This will impact Vite dev & build performances.
+## Available Scripts
 
-## Expanding the ESLint configuration
+- `npm run dev` - Starts the development server
+- `npm run build` - Builds the app for production
+- `npm run preview` - Previews the production build
+- `npm run lint` - Runs ESLint
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Environment Variables
+
+Make sure to configure your Clarifai API key in the FaceRecognition component.
