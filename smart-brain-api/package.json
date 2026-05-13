@@ -12,6 +12,7 @@
   "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "clarifai": "^2.9.1",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "knex": "^3.2.10",

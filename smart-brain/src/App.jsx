@@ -10,36 +10,23 @@ import Rank from "./components/Rank/Rank";
 import "./App.css";
 // import { useEffect } from "react";
 
-const MODEL_ID = "face-detection";
 
-const returnClarifaiRequestOptions = (imageUrl) => {
-  const PAT = "ea7cd18f70b1478eb2c72f6ae7685c99";
-  const USER_ID = "clarifai";
-  const APP_ID = "main";
 
-  return {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      Authorization: "Key " + PAT,
-    },
-    body: JSON.stringify({
-      user_app_id: {
-        user_id: USER_ID,
-        app_id: APP_ID,
-      },
-      inputs: [
-        {
-          data: {
-            image: {
-              url: imageUrl,
-            },
-          },
-        },
-      ],
-    }),
-  };
+const initialState = {
+  input: "",
+  imageUrl: "",
+  box: {},
+  route: "signin",
+  isSignedIn: false,
+  user: {
+    id: "",
+    name: "",
+    email: "",
+    entries: 0,
+    joined: "",
+  }
 };
+
 
 function App() {
   const [input, setInput] = useState("");
@@ -47,13 +34,16 @@ function App() {
   const [box, setBox] = useState({});
   const [route, setRoute] = useState("signin");
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState({
-    id: "",
-    name: "",
-    email: "",
-    entries: 0,
-    joined: "",
-  });
+  const [user, setUser] = useState(initialState.user);
+
+  const resetState = () => {
+    setUser(initialState.user);
+    setInput(initialState.input);
+    setImageUrl(initialState.imageUrl);
+    setBox(initialState.box);
+    setIsSignedIn(false);
+  };
+
 
   const loadUser = (data) => {
     setUser({
@@ -85,10 +75,14 @@ function App() {
   const onPictureSubmit = () => {
     setImageUrl(input);
 
-    fetch(
-      `https://api.clarifai.com/v2/models/${MODEL_ID}/outputs`,
-      returnClarifaiRequestOptions(input)
-    )
+
+    fetch("http://localhost:3000/imageurl", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: input
+      })
+    })
       .then((res) => res.json())
       .then((response) => {
         if (response) {
@@ -100,16 +94,16 @@ function App() {
             .then((res) => res.json())
             .then((count) =>
               setUser((prev) => ({ ...prev, entries: count }))
-            );
+            ).catch(console.log)
         }
         setBox(calculateFaceLocation(response));
       })
-      .catch(console.log);
+      .catch(err => console.log(err));
   };
 
   const onRouteChange = (route) => {
   if (route === "signout") {
-    setIsSignedIn(false);
+    resetState();
     setRoute("signin"); 
   } else if (route === "home") {
     setIsSignedIn(true);
