@@ -72,34 +72,34 @@ function App() {
     };
   };
 
-  const onPictureSubmit = () => {
-    setImageUrl(input);
+ const onPictureSubmit = () => {
+  setImageUrl(input);
 
-
-    fetch("http://localhost:3000/imageurl", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        input: input
-      })
+  fetch(`${import.meta.env.VITE_API_URL}/imageurl`, {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      input: input
     })
-      .then((res) => res.json())
-      .then((response) => {
-        if (response) {
-          fetch("http://localhost:3000/image", {
-            method: "put",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: user.id }),
-          })
-            .then((res) => res.json())
-            .then((count) =>
-              setUser((prev) => ({ ...prev, entries: count }))
-            ).catch(console.log)
-        }
-        setBox(calculateFaceLocation(response));
-      })
-      .catch(err => console.log(err));
-  };
+  })
+    .then((res) => res.json())
+    .then((response) => {
+      if (response) {
+        fetch(`${import.meta.env.VITE_API_URL}/image`, {
+          method: "put",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: user.id }),
+        })
+          .then((res) => res.json())
+          .then((count) =>
+            setUser((prev) => ({ ...prev, entries: count }))
+          )
+          .catch(console.log);
+      }
+      setBox(calculateFaceLocation(response));
+    })
+    .catch(err => console.log(err));
+};
 
   const onRouteChange = (route) => {
   if (route === "signout") {
