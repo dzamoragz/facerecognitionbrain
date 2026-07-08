@@ -8,7 +8,8 @@ const Register = ({loadUser, onRouteChange }) => {
   const [Name, setName] = useState("");
   
     const onSubmitRegister = () => {
-      fetch(`${import.meta.env.VITE_API_URL}/register`, {
+    const base = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
+      fetch(`${base}/register`, {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

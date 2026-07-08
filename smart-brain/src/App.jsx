@@ -74,8 +74,9 @@ function App() {
 
  const onPictureSubmit = () => {
   setImageUrl(input);
+  const base = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
 
-  fetch(`${import.meta.env.VITE_API_URL}/imageurl`, {
+  fetch(`${base}/imageurl`, {
     method: "post",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -85,7 +86,7 @@ function App() {
     .then((res) => res.json())
     .then((response) => {
       if (response) {
-        fetch(`${import.meta.env.VITE_API_URL}/image`, {
+        fetch(`${base}/image`, {
           method: "put",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: user.id }),

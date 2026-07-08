@@ -5,7 +5,8 @@ const Signin = ({loadUser,onRouteChange}) => {
   const [signInPassword, setSignInPassword] = useState("");
 
   const onSubmitSignIn = () => {
-    fetch(`${import.meta.env.VITE_API_URL}/signin`, {
+    const base = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
+    fetch(`${base}/signin`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
