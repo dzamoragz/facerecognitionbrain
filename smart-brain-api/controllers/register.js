@@ -1,9 +1,15 @@
 const handleRegister= (req,res,db,bcrypt)=>{
+    console.log('handleRegister called', req.body);
     const {email,name,password}= req.body;
     if ( !email || !name || !password){
-       return res.status(400).json('incorrect form submission')
+       console.error('register validation failed', { email, name, password });
+       return res.status(400).json('incorrect form submission');
     }
-    const hash = bcrypt.hashSync(password,10)
+    if (!db) {
+      console.error('register error: database not configured');
+      return res.status(500).json('unable to register');
+    }
+    const hash = bcrypt.hashSync(password,10);
     db.transaction(trx=>{
       trx.insert({
         hash,
@@ -24,7 +30,7 @@ const handleRegister= (req,res,db,bcrypt)=>{
     })
         .catch(err => {
             console.error('register error:', err);
-            return res.status(400).json('unable to register')
+            return res.status(500).json('unable to register')
         })
 }
 
