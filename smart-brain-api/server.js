@@ -1,3 +1,5 @@
+require('dotenv').config({ path: __dirname + '/.env' });
+
 const express = require('express')
 const bcrypt = require('bcrypt');
 const cors = require('cors');
@@ -47,10 +49,13 @@ app.post('/imageurl',(req,res)=>{ image.returnClarifaiRequestOptions(req, res)})
 
 
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
+module.exports = app;
 
 
 
