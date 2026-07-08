@@ -16,19 +16,20 @@ let db;
 try {
   if (!process.env.DATABASE_URL) {
     console.error('WARNING: DATABASE_URL is not set in environment');
+    db = null;
   } else {
     console.log('DATABASE_URL is present');
-  }
 
-  db = knex({
-    client: 'pg',
-    connection: {
-      connectionString: process.env.DATABASE_URL,
-      ssl: {
-        rejectUnauthorized: false
+    db = knex({
+      client: 'pg',
+      connection: {
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false
+        }
       }
-    }
-  });
+    });
+  }
 } catch (err) {
   console.error('knex initialization error:', err);
 }

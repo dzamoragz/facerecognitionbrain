@@ -1,66 +1,58 @@
-
-
-
-
-
-
-const returnClarifaiRequestOptions = (req,res) => {
-
+const returnClarifaiRequestOptions = (req, res) => {
     const input = req.body.input;
-    const PAT = "ea7cd18f70b1478eb2c72f6ae7685c99";
+    const PAT = process.env.CLARIFAI_PAT || "ea7cd18f70b1478eb2c72f6ae7685c99";
     const MODEL_ID = "face-detection";
     const USER_ID = "clarifai";
     const APP_ID = "main";
-    
 
-    fetch(`https://api.clarifai.com/v2/models/${MODEL_ID}/outputs`, 
-    {
+    const body = {
+        user_app_id: {
+            user_id: USER_ID,
+            app_id: APP_ID,
+        },
+        inputs: [
+            {
+                data: {
+                    image: {
+                        url: input,
+                    },
+                },
+            },
+        ],
+    };
+
+    fetch(`https://api.clarifai.com/v2/models/${MODEL_ID}/outputs`, {
         method: "POST",
         headers: {
             Accept: "application/json",
             Authorization: "Key " + PAT,
         },
-            .then(data => res.json(data))
-            .catch(err => {
-                    console.error('clarifai request error:', err);
-                    return res.status(400).json('unable to work with API')
-            });
-                user_id: USER_ID,
-                app_id: APP_ID,
-            },
-            inputs: [
-                {
-                data: {
-                    image: {
-                    url: input,
-                    },
-                },
-                },
-            ],
-        }),
-  })
-    .then(response => response.json())
-    .then(data => res.json(data))
-    .catch(err => res.status(400).json('unable to work with API'));
-
+        body: JSON.stringify(body),
+    })
+        .then((response) => response.json())
+        .then((data) => res.json(data))
+        .catch((err) => {
+            console.error("clarifai request error:", err);
+            return res.status(400).json("unable to work with API");
+        });
 };
 
+const handleImage = (req, res, db) => {
+    const { id } = req.body;
+    db("users")
+        .where("id", "=", id)
+        .increment("entries", 1)
+        .returning("entries")
+        .then((entries) => {
+            res.json(entries[0].entries);
+        })
+        .catch((err) => {
+            console.error("image entries error:", err);
+            return res.status(400).json("unable to get entries");
+        });
+};
 
-const handleImage=(req,res,db)=>{
-    const {id}= req.body;
-    db('users').where('id', '=', id)
-    .increment('entries', 1)
-    .returning('entries')
-    .then(entries =>{
-        res.json(entries[0].entries )
-    })
-    .catch(err =>{
-        console.error('image entries error:', err);
-        return res.status(400).json('unable to get entries')
-    })
-}
-
-module.exports={
+module.exports = {
     handleImage,
-    returnClarifaiRequestOptions
-}
+    returnClarifaiRequestOptions,
+};
