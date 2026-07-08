@@ -20,8 +20,11 @@ const returnClarifaiRequestOptions = (req,res) => {
             Accept: "application/json",
             Authorization: "Key " + PAT,
         },
-        body: JSON.stringify({
-            user_app_id: {
+            .then(data => res.json(data))
+            .catch(err => {
+                    console.error('clarifai request error:', err);
+                    return res.status(400).json('unable to work with API')
+            });
                 user_id: USER_ID,
                 app_id: APP_ID,
             },
@@ -51,7 +54,10 @@ const handleImage=(req,res,db)=>{
     .then(entries =>{
         res.json(entries[0].entries )
     })
-    .catch(err =>{res.status(400).json('unable to get entries')})
+    .catch(err =>{
+        console.error('image entries error:', err);
+        return res.status(400).json('unable to get entries')
+    })
 }
 
 module.exports={

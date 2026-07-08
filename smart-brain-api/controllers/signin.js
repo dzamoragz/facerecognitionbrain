@@ -9,13 +9,19 @@ const handleSignin = (req,res,db,bcrypt)=>{
         return db.select('*').from('users').where('email', '=', email).then(user=>{
             res.json(user[0])
         })
-        .catch(err => res.status(400).json('unable to get user'))
+        .catch(err => {
+            console.error('signin user fetch error:', err);
+            return res.status(400).json('unable to get user')
+        })
        }else{
          res.status(400).json('wrong credentials')
        }
 
     })
-    .catch(err => res.status(400).json('wrong credentials'))
+    .catch(err => {
+        console.error('signin lookup error:', err);
+        return res.status(400).json('wrong credentials')
+    })
 }
 
 module.exports= {
